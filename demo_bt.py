@@ -58,7 +58,10 @@ class ManualControlBT:
         self.reconstruct_obs_wrapper = reconstruct_obs_wrapper_class(np.array(self.image_shape))
         self.obs = self.reconstruct_obs_wrapper.reconstruct_observation(_observation)
         self.tree: BehaviourTree = tree_creation_func(self.env, self.obs)
-        py_trees.display.render_dot_tree(self.tree.root, target_directory="/tmp")
+        output_name = tree_creation_func.__name__
+        if output_name and output_name.startswith("create_"):
+            output_name = output_name[7:]
+        py_trees.display.render_dot_tree(self.tree.root, name=output_name, target_directory="/tmp")
 
     def _predict(self, observation, deterministic=False):
         if isinstance(observation, tuple):
